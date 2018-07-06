@@ -1,6 +1,6 @@
 label
 octave:2
-tempo:120
+tempo:500
 DO:1
 FA:1
 FA:1
@@ -21,11 +21,14 @@ SOL:0.5
 LA:0.5
 PAUSE:0.5
 octave:1
-SOL:0.5
+LA:0.5
 PAUSE:0.5
 octave:2
 goto
 LA:0.5
 SOL:0.5
 FA:0.5
-
+octave:1
+LA:0.5
+octave:2
+DO:0.5

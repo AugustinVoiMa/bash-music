@@ -4,6 +4,13 @@ freq=$1
 last=$2
 
 speaker-test -t sine -f $freq -l 1 -p 1 2>&1 >/dev/null &
-pid=$!
+pid1=$!
+speaker-test -t sine -f $((freq*3)) -l 1 -p 1 2>&1 >/dev/null &
+pid2=$!
+speaker-test -t sine -f $((freq*5)) -l 1 -p 1 2>&1 >/dev/null &
+pid3=$!
+speaker-test -t sine -f $(bc <<< "scale=5;"$freq" * 3 +8") -l 1 -p 1 2>&1 >/dev/null &
+pid4=$!
+
 sleep $last
-kill -9 $pid > /dev/null
+kill -9 $pid1 $pid2 $pid3 $pid4 > /dev/null
