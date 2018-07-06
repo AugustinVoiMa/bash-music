@@ -1,0 +1,56 @@
+#!/bin/bash
+DO=262
+DOd=277
+RE=294
+REd=311
+MI=330
+FA=349
+FAd=370
+SOL=392
+SOLd=415
+LA=440
+LAd=466
+SI=493
+
+bpm=120;
+oct_mul=1;
+fic=$(cat $1);
+line_max=$(( $(wc -l $1 | cut -f 1 -d ' ') ));
+line_nb=1;
+label_line=1;
+goto_line=$line_max;
+num_loop=1;
+
+while [[ $line_nb -le $line_max ]]
+do
+	line=$(echo $fic | cut -d ' ' -f $line_nb);
+	if [[ $line = "octave:"* ]]; then
+		oct_mul=$(echo $line | cut -f 2 -d ":" );
+	elif [[ $line = "tempo:"* ]]; then
+		bpm=$(echo $line | cut -f 2 -d ":" );
+	elif [[ $line = "goto" ]]; then
+		num_loop=$(( $num_loop + 1 ));
+		goto_line=$line_nb;
+		line_nb=$label_line;
+		continue;
+	elif [[ $line = "label" ]]; then
+		label_line=$line_nb;
+	elif [[ $line = "first-only" ]]; then
+		if [ $num_loop -gt "1" ]; then
+			line_nb=$(( $goto_line + 1));
+			num_loop=1;
+			continue
+		fi
+	else
+		note=$(echo $line | cut -f 1 -d ":" );
+        	last=$(echo $line | cut -f 2 -d ":" );
+                last=$(bc <<< "scale=5;"$last" * 60 / "$bpm);
+		if [[ $note = "PAUSE" ]]; then
+			sleep $last;
+		else
+	                note=$(bc <<< "scale=5; "${!note}" * "$oct_mul);
+			play $note $last
+		fi
+	fi
+	line_nb=$(($line_nb + 1));
+done;
