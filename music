@@ -1,4 +1,9 @@
 #!/bin/bash
+
+FREQ_MUL=${FREQ_MUL:-1}
+TEMPO_MUL=${TEMPO_MUL:-1}
+echo $MSG
+
 DO=262
 DOd=277
 RE=294
@@ -44,11 +49,11 @@ do
 	else
 		note=$(echo $line | cut -f 1 -d ":" );
         	last=$(echo $line | cut -f 2 -d ":" );
-                last=$(bc <<< "scale=5;"$last" * 60 / "$bpm);
+                last=$(bc <<< "scale=5;"$last" / "$TEMPO_MUL" * 60 / "$bpm);
 		if [[ $note = "PAUSE" ]]; then
 			sleep $last;
 		else
-	                note=$(bc <<< "scale=5; "${!note}" * "$oct_mul);
+	                note=$(bc <<< "scale=5; "${!note}" * "$oct_mul" * "$FREQ_MUL);
 			play $note $last
 		fi
 	fi
