@@ -1,8 +1,7 @@
 #!/bin/bash
 
-FREQ_MUL=${FREQ_MUL:-1}
-TEMPO_MUL=${TEMPO_MUL:-1}
-echo $MSG
+FREQ_MUL=${FREQ_MUL:=1}
+TEMPO_MUL=${TEMPO_MUL:=1}
 
 DO=262
 DOd=277
