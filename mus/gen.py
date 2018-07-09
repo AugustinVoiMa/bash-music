@@ -20,7 +20,17 @@ notes=["DO","MI","SOL"]
 notes=["DO","RE","MI","FA","SOL","LA","SI"]
 
 voisins=[-1, 0, 1, 2, -2, 4, -4]
-currnote=0
+
+voisins={
+    "DO":[20,7, 20,3,1,5,7],
+    "RE":[7, 20,7,20,3,1,5],
+    "MI":[5,7,20,7,20,3,1],
+    "FA":[1,5,7,20,7,20,3],
+    "SOL":[3,1,5,7,20,7,20],
+    "LA":[0,3,1,5,7,20,7],
+    "SI":[7,20,3,1,5,7,20]}
+
+currnote="DO"
 
 rythmes=[0.25, 0.5, 0.75, 1, 1.5, 2]
 rythmes=[1]
@@ -50,10 +60,18 @@ def rand_name(part=4):
 	return file
 
 def rand_note():
-	global currnote
-	currnote += random.choice(voisins)
-	currnote %= len(notes)
-	return notes[currnote]
+    global currnote
+    probs = voisins[currnote]
+    idx = []
+    l=0
+    for x in probs:
+        l+=x
+        idx.append(l)
+    c = random.uniform(0,idx[-1]);
+    i=0    
+    while i+1 < len(idx) and not ( idx[i] < c and c < idx[i+1]):
+        i+=1
+    return notes[i]
 
 def rand_duration():
 	duree = random.uniform(min_duree,max_duree)
