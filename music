@@ -1,7 +1,8 @@
 #!/bin/bash
 
-FREQ_MUL=${FREQ_MUL:=1}
-TEMPO_MUL=${TEMPO_MUL:=1}
+FREQ_MUL=${FREQ_MUL:-1}
+TEMPO_MUL=${TEMPO_MUL:-1}
+echo $MSG
 
 DO=262
 DOd=277
@@ -32,13 +33,19 @@ do
 		oct_mul=$(echo $line | cut -f 2 -d ":" );
 	elif [[ $line = "tempo:"* ]]; then
 		bpm=$(echo $line | cut -f 2 -d ":" );
-	elif [[ $line = "goto" ]]; then
+	elif [[ $line = "goto"* ]]; then
+		max_loop=$(echo $line | cut -f 2 -d ":" );
 		num_loop=$(( $num_loop + 1 ));
-		goto_line=$line_nb;
-		line_nb=$label_line;
+		if [[ ${line} != *":"* || $num_loop -le $max_loop ]]; then
+			goto_line=$line_nb;
+			line_nb=$(($label_line+1));
+		else
+			line_nb=$(($line_nb+1));
+		fi
 		continue;
 	elif [[ $line = "label" ]]; then
 		label_line=$line_nb;
+		num_loop=1;
 	elif [[ $line = "first-only" ]]; then
 		if [ $num_loop -gt "1" ]; then
 			line_nb=$(( $goto_line + 1));
