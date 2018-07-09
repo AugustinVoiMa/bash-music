@@ -1,4 +1,5 @@
 import random
+import numpy
 import os
 
 def makemydir(whatever):
@@ -18,14 +19,19 @@ notes=["DO","MI","SOL"]
 
 notes=["DO","RE","MI","FA","SOL","LA","SI"]
 
+voisins=[-1, 0, 1, 2, -2, 4, -4]
+currnote=0
+
+rythmes=[0.25, 0.5, 0.75, 1, 1.5, 2]
+rythmes=[1]
 
 
 min_duree=0.1
 max_duree=4.0
 min_octave=2
-max_octave=4
-min_tempo=100
-max_tempo=1000
+max_octave=2
+min_tempo=130
+max_tempo=180
 ln="\n"
 sep="_____________________"
 
@@ -44,10 +50,15 @@ def rand_name(part=4):
 	return file
 
 def rand_note():
-	return random.choice(notes)
+	global currnote
+	currnote += random.choice(voisins)
+	currnote %= len(notes)
+	return notes[currnote]
 
 def rand_duration():
 	duree = random.uniform(min_duree,max_duree)
+	duree = numpy.random.normal(2,1.5)
+	duree = random.choice(rythmes)
 	return round(duree,2)
 
 def rand_line():
@@ -61,7 +72,7 @@ def rand_tempo():
 	return str(random.randint(min_tempo,max_tempo))
 
 def var_octave():
-	return random.random()<0.1
+ 	return random.random()<0.1
 
 
 
