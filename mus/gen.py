@@ -19,21 +19,12 @@ notes=["DO","MI","SOL"]
 
 notes=["DO","RE","MI","FA","SOL","LA","SI"]
 
-voisins=[-1, 0, 1, 2, -2, 4, -4]
 
-voisins={
-    "DO":[20,7, 20,3,1,5,7],
-    "RE":[7, 20,7,20,3,1,5],
-    "MI":[5,7,20,7,20,3,1],
-    "FA":[1,5,7,20,7,20,3],
-    "SOL":[3,1,5,7,20,7,20],
-    "LA":[0,3,1,5,7,20,7],
-    "SI":[7,20,3,1,5,7,20]}
+voisins=[8,10, 14,15,7,1,2]
 
-currnote="DO"
+currnote=0
 
 rythmes=[0.25, 0.5, 0.75, 1, 1.5, 2]
-#rythmes=[1]
 
 
 min_duree=0.1
@@ -62,17 +53,18 @@ def rand_name(part=4):
 
 def rand_note():
     global currnote
-    probs = voisins[currnote]
     idx = []
     l=0
-    for x in probs:
+    for x in voisins:
         l+=x
         idx.append(l)
     c = random.uniform(0,idx[-1]);
-    i=0    
+    i=0
     while i+1 < len(idx) and not ( idx[i] < c and c < idx[i+1]):
         i+=1
-    return notes[i]
+    currnote += i;
+    currnote %= len(notes)
+    return notes[currnote]
 
 def rand_duration():
 	duree = random.uniform(min_duree,max_duree)
@@ -103,10 +95,10 @@ def rand_mesure():
 		if(temps_restants < duree):
 			duree=temps_restants
 		temps_restants-=duree
-		line=make_line(note,duree)	
+		line=make_line(note,duree)
 		lines+=line
 	return lines
-	
+
 def var_octave():
  	return random.random()<0.1
 
