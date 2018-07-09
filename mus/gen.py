@@ -33,7 +33,7 @@ voisins={
 currnote="DO"
 
 rythmes=[0.25, 0.5, 0.75, 1, 1.5, 2]
-rythmes=[1]
+#rythmes=[1]
 
 
 min_duree=0.1
@@ -42,6 +42,7 @@ min_octave=2
 max_octave=2
 min_tempo=130
 max_tempo=180
+nb_temps=4
 ln="\n"
 sep="_____________________"
 
@@ -79,8 +80,12 @@ def rand_duration():
 	duree = random.choice(rythmes)
 	return round(duree,2)
 
+def make_line(note,duree):
+	line=str(note)+":"+str(duree)+ln
+	return line
+
 def rand_line():
-	line=str(rand_note())+":"+str(rand_duration())
+	line=make_line(rand_note(),rand_duration())
 	return line
 
 def rand_octave():
@@ -89,6 +94,19 @@ def rand_octave():
 def rand_tempo():
 	return str(random.randint(min_tempo,max_tempo))
 
+def rand_mesure():
+	temps_restants=nb_temps
+	lines=""
+	while(temps_restants != 0):
+		note=rand_note()
+		duree=rand_duration()
+		if(temps_restants < duree):
+			duree=temps_restants
+		temps_restants-=duree
+		line=make_line(note,duree)	
+		lines+=line
+	return lines
+	
 def var_octave():
  	return random.random()<0.1
 
@@ -103,7 +121,8 @@ def build_file(file,nb_notes=100,tempo=rand_tempo(),octave=rand_octave()):
 			new_oct=rand_octave()
 			print("NEW OCTAVE : "+new_oct)
 			file.write("octave:"+new_oct+ln)
-		file.write(rand_line()+ln)
+		#file.write(rand_line())
+		file.write(rand_mesure())
 	return file
 
 
